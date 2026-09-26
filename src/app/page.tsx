@@ -18,6 +18,7 @@ export default function Home() {
   return (
     <main className="page">
       <div className="masthead">
+        <span className="glow-orb" aria-hidden="true" />
         <h1>Marginalia</h1>
         <p>grammar · tone · translation — checked against rules you define</p>
         <AuthButton />

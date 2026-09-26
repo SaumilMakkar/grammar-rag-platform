@@ -25,10 +25,12 @@ export const authOptions: NextAuthOptions = {
   events: {
     // Fires exactly once, the moment the adapter creates a brand-new user —
     // gives every new account a starter set of rules instead of an empty list.
+    // Not awaited: embedding the seed rules can take 60s+ on a cold model
+    // load, and that must never block or fail the sign-in response itself.
     async createUser({ user }) {
-      await Promise.all(
-        DEFAULT_STYLE_RULES.map((text) => addStyleRule(text, user.id))
-      );
+      Promise.all(DEFAULT_STYLE_RULES.map((text) => addStyleRule(text, user.id))).catch((err) => {
+        console.error("Failed to seed default rules for new user", user.id, err);
+      });
     }
   }
 };

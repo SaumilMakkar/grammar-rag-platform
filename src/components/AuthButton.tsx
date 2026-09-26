@@ -15,10 +15,13 @@ export default function AuthButton() {
     );
   }
 
+  const initial = session.user?.name?.trim()?.[0]?.toUpperCase() ?? "?";
+
   return (
     <div className="auth-status">
-      <span>{session.user?.name}</span>
-      <button onClick={() => signOut()}>Sign out</button>
+      <span className="auth-avatar">{initial}</span>
+      <span className="auth-name">{session.user?.name}</span>
+      <button className="auth-signout" onClick={() => signOut()}>Sign out</button>
     </div>
   );
 }
