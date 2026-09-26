@@ -6,22 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "seed": "tsx scripts/seedRules.ts"
+    "seed": "tsx scripts/seedRules.ts",
+    "test": "vitest run",
+    "eval": "tsx scripts/runEval.ts"
   },
   "dependencies": {
+    "@auth/mongodb-adapter": "^3.11.3",
     "@xenova/transformers": "^2.17.2",
+    "diff": "^9.0.0",
     "groq-sdk": "^0.7.0",
     "mongodb": "^6.8.0",
     "next": "^14.2.35",
+    "next-auth": "^4.24.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/node": "^20.14.11",
+    "@types/diff": "^7.0.2",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "dotenv": "^18.0.3",
     "tsx": "^4.16.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^5.0.1"
   }
 }

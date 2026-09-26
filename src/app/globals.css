@@ -46,6 +46,32 @@ html, body {
   margin: 0;
 }
 
+.auth-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+}
+
+.auth-status button {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  padding: 6px 12px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.desk {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
 .manuscript {
   background: var(--paper-raised);
   border: 1px solid rgba(43, 38, 32, 0.15);
@@ -124,6 +150,12 @@ html, body {
   padding-top: 14px;
   font-style: italic;
 }
+.cursor {
+  display: inline-block;
+  color: var(--pencil-red);
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
 
 .rules-panel {
   background: var(--paper-raised);
@@ -151,4 +183,15 @@ html, body {
   color: var(--paper-raised);
   border: none;
   cursor: pointer;
+}
+.diff-removed {
+  color: var(--pencil-red);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.diff-added {
+  color: var(--rule-teal);
+  text-decoration: underline;
+  text-decoration-style: dotted;
 }

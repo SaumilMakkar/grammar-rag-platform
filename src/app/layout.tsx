@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import Providers from "@/components/Providers";
 export const metadata: Metadata = {
   title: "Marginalia — style-aware writing assistant",
   description: "Grammar, tone, and translation correction grounded in your own style rules via RAG."
@@ -17,7 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+        </body>
     </html>
   );
 }

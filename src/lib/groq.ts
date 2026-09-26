@@ -56,3 +56,44 @@ export async function correctText(
     };
   }
 }
+function buildStreamingSystemPrompt(rules: StyleRule[], tone?: string, translateTo?: string) {
+  const ruleBlock = rules.length
+    ? rules.map((r, i) => `${i + 1}. ${r.text}`).join("\n")
+    : "None on file yet — use general professional writing conventions.";
+
+  return `You are a precise writing assistant. Fix grammar, spelling, and clarity issues in the user's text.
+
+Custom style rules retrieved for this text (you MUST follow these; they override generic style):
+${ruleBlock}
+
+${tone ? `Target tone: ${tone}.` : ""}
+${translateTo ? `Also provide a translation into ${translateTo}, included in the metadata below.` : ""}
+
+Output format (follow EXACTLY):
+1. Write ONLY the corrected text — plain text, no quotes, no JSON, no preamble.
+2. Then on its own line, write exactly: ===META===
+3. Then a single JSON object (no markdown fences):
+{
+  "explanation": "1-2 sentence summary of what changed and why",
+  "appliedRules": ["exact text of any rules above that you actually applied"]${
+    translateTo ? ',\n  "translated": "translated version of the corrected text"' : ""
+  }
+}`;
+}
+
+export async function streamCorrectText(
+  text: string,
+  rules: StyleRule[],
+  tone?: string,
+  translateTo?: string
+) {
+  return groq.chat.completions.create({
+    model: MODEL,
+    temperature: 0.2,
+    stream: true,
+    messages: [
+      { role: "system", content: buildStreamingSystemPrompt(rules, tone, translateTo) },
+      { role: "user", content: text }
+    ]
+  });
+}

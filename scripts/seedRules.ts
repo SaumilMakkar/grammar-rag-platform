@@ -1,6 +1,10 @@
 import "./loadEnv";
 import { addStyleRule } from "../src/lib/vectorStore";
 
+// Rules are scoped per-user; override with a real signed-in user's id if you
+// want these to actually show up in the app for that account.
+const SEED_USER_ID = process.env.SEED_USER_ID || "seed-user";
+
 const SEED_RULES = [
   "Never use passive voice in product documentation.",
   "Spell out numbers below 10; use digits for 10 and above.",
@@ -12,7 +16,7 @@ const SEED_RULES = [
 
 async function main() {
   for (const rule of SEED_RULES) {
-    const id = await addStyleRule(rule);
+    const id = await addStyleRule(rule, SEED_USER_ID);
     console.log(`Added rule: "${rule}" -> ${id}`);
   }
   process.exit(0);

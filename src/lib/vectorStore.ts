@@ -1,42 +1,86 @@
 import { getRulesCollection } from "./db";
-import { cosineSimilarity, embedText } from "./embeddings";
-import { StyleRule } from "../types";
+import { embedText } from "./embeddings";
+import { StyleRule } from "@/types";
+
+export interface ScoredRule {
+  rule: StyleRule;
+  score: number;
+}
 
 /**
- * Simple in-app RAG retrieval:
- * 1. Embed the incoming text.
- * 2. Pull all style rules (fine at hundreds of rules; swap for
- *    MongoDB Atlas $vectorSearch once the rule set grows large).
- * 3. Rank by cosine similarity, return the top-k above a relevance floor.
+ * Retrieval via MongoDB Atlas $vectorSearch — the DB's own ANN index
+ * does the similarity search, instead of pulling every rule into the
+ * app and scoring them in a JS loop (that's what this replaces).
+ *
+ * Note: Atlas's cosine score is normalized to [0, 1], not [-1, 1] —
+ * minScore means something slightly different than it did before.
  */
+export async function retrieveRelevantRulesWithScores(
+  text: string,
+  userId: string,
+  topK = 4,
+  minScore = 0.3
+): Promise<ScoredRule[]> {
+  const queryEmbedding = await embedText(text);
+  const collection = await getRulesCollection();
+
+  const results = await collection
+    .aggregate([
+      {
+        $vectorSearch: {
+          index: "style_rules_vector_index",
+          path: "embedding",
+          queryVector: queryEmbedding,
+          numCandidates: 100, // how many candidates the ANN index considers before ranking
+          limit: topK,
+          filter: { userId: { $eq: userId } } // scope retrieval to this user's own rules
+        }
+      },
+      {
+        $project: {
+          text: 1,
+          category: 1,
+          createdAt: 1,
+          score: { $meta: "vectorSearchScore" } // Atlas attaches the similarity score here
+        }
+      }
+    ])
+    .toArray();
+
+  return results
+    .filter((r) => r.score >= minScore)
+    .map((r) => ({
+      rule: {
+        _id: r._id,
+        text: r.text,
+        category: r.category,
+        createdAt: r.createdAt,
+        userId,
+        embedding: [] // not returned by Atlas here — not needed downstream, so left empty
+      } as StyleRule,
+      score: r.score
+    }));
+}
+
+// Unchanged — still used by anything wanting just the rules, no scores.
 export async function retrieveRelevantRules(
   text: string,
+  userId: string,
   topK = 4,
   minScore = 0.3
 ): Promise<StyleRule[]> {
-  const queryEmbedding = await embedText(text);
-  const collection = await getRulesCollection();
-  const rules = (await collection.find({}).toArray()) as unknown as StyleRule[];
-
-  const scored = rules
-    .map((rule) => ({
-      rule,
-      score: cosineSimilarity(queryEmbedding, rule.embedding)
-    }))
-    .filter((r) => r.score >= minScore)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, topK);
-
+  const scored = await retrieveRelevantRulesWithScores(text, userId, topK, minScore);
   return scored.map((s) => s.rule);
 }
 
-export async function addStyleRule(text: string, category?: string) {
+export async function addStyleRule(text: string, userId: string, category?: string) {
   const embedding = await embedText(text);
   const collection = await getRulesCollection();
   const result = await collection.insertOne({
     text,
     embedding,
     category,
+    userId,
     createdAt: new Date()
   });
   return result.insertedId;

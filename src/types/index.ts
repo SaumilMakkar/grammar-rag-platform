@@ -1,10 +1,4 @@
-export interface StyleRule {
-  _id?: string;
-  text: string; // e.g. "Never use passive voice in product docs"
-  embedding: number[];
-  category?: string; // e.g. "tone", "grammar", "terminology"
-  createdAt?: Date;
-}
+
 
 
 export interface CorrectionRequest {
@@ -18,4 +12,18 @@ export interface CorrectionResponse {
   explanation: string;
   appliedRules: string[]; // which retrieved style rules were actually used
   translated?: string;
+}
+export interface StyleRule {
+  _id?: string;
+  text: string;
+  embedding: number[];
+  category?: string;
+  userId: string; // owner — scopes retrieval and the rules list per user
+  createdAt?: Date;
+}
+
+export interface RetrievalLogEntry {
+  ruleText: string;
+  score: number;
+  wasApplied: boolean;
 }
