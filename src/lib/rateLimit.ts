@@ -4,7 +4,7 @@ interface WindowState {
 }
 
 const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
-const MAX_REQUESTS = 2; // per user, per window
+const MAX_REQUESTS = 20; // per user, per window
 
 // In-memory — correct only because Railway runs one persistent process.
 // Would need a Redis-backed store if this app ever scales to multiple instances.
