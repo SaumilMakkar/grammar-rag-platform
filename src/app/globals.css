@@ -102,21 +102,26 @@ body::after {
 }
 
 .topbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
   border-bottom: 1px solid var(--panel-border);
   padding-bottom: 22px;
   margin-bottom: 40px;
-  flex-wrap: wrap;
 }
 
 .topbar-actions {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 50;
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .topbar-actions {
+    position: static;
+    margin-top: 16px;
+  }
 }
 
 .theme-toggle {

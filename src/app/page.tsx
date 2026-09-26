@@ -55,7 +55,6 @@ export default function Home() {
               <li>Optional translation, grounded in your corrected text</li>
               <li>Your own style rules, retrieved and applied automatically</li>
             </ul>
-            <AuthButton />
           </div>
           <div className="hero-art">
             <MascotIcon />
