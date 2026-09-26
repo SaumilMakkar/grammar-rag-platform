@@ -74,8 +74,14 @@ export async function retrieveRelevantRules(
 }
 
 export async function addStyleRule(text: string, userId: string, category?: string) {
-  const embedding = await embedText(text);
   const collection = await getRulesCollection();
+
+  // Idempotent: re-adding the same rule text for the same user is a no-op
+  // rather than a duplicate document (seed scripts and re-seeding rely on this).
+  const existing = await collection.findOne({ userId, text });
+  if (existing) return existing._id;
+
+  const embedding = await embedText(text);
   const result = await collection.insertOne({
     text,
     embedding,

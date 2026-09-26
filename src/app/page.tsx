@@ -57,6 +57,10 @@ export default function Home() {
             </ul>
           </div>
           <div className="hero-art">
+            <span className="feature-bubble bubble-1">Grammar fixes</span>
+            <span className="feature-bubble bubble-2">Tone matching</span>
+            <span className="feature-bubble bubble-3">Live translation</span>
+            <span className="feature-bubble bubble-4">Your own rules</span>
             <MascotIcon />
             <p>Your digital writing assistant, always ready</p>
           </div>

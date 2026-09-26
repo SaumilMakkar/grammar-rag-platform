@@ -27,9 +27,12 @@ function scoreCase(expected: string[], retrieved: string[]): {
   falsePositives: string[];
   falseNegatives: string[];
 } {
-  const truePositives = retrieved.filter((r) => expected.includes(r));
-  const falsePositives = retrieved.filter((r) => !expected.includes(r));
-  const falseNegatives = expected.filter((e) => !retrieved.includes(e));
+  // Dedupe before scoring: a duplicate retrieved rule (e.g. stale data with
+  // repeated documents) must never count more than once toward precision/recall.
+  const uniqueRetrieved = Array.from(new Set(retrieved));
+  const truePositives = uniqueRetrieved.filter((r) => expected.includes(r));
+  const falsePositives = uniqueRetrieved.filter((r) => !expected.includes(r));
+  const falseNegatives = expected.filter((e) => !uniqueRetrieved.includes(e));
   return { truePositives, falsePositives, falseNegatives };
 }
 

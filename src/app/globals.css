@@ -217,6 +217,7 @@ body::after {
 }
 
 .hero-art {
+  position: relative;
   flex: 0 1 260px;
   display: flex;
   flex-direction: column;
@@ -235,6 +236,43 @@ body::after {
   height: auto;
   filter: drop-shadow(0 0 26px var(--neon-soft));
   animation: floatY 5s ease-in-out infinite;
+}
+
+.feature-bubble {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--neon);
+  background: var(--panel-solid);
+  border: 1px solid rgba(77, 255, 160, 0.35);
+  border-radius: 999px;
+  padding: 7px 14px;
+  white-space: nowrap;
+  box-shadow: 0 0 14px var(--neon-soft);
+  animation: floatY 4.5s ease-in-out infinite;
+}
+
+.feature-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: inherit;
+  border: inherit;
+  transform: translateX(-50%);
+}
+
+.bubble-1 { top: -14px; left: -6px; animation-delay: 0s; }
+.bubble-2 { top: -14px; right: -6px; animation-delay: 1.2s; }
+.bubble-3 { top: 100px; left: -34px; animation-delay: 2.1s; }
+.bubble-4 { top: 100px; right: -34px; animation-delay: 0.6s; }
+
+@media (max-width: 640px) {
+  .feature-bubble { display: none; }
 }
 
 .hero-art p {
