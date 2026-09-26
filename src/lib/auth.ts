@@ -11,11 +11,16 @@ export const authOptions: NextAuthOptions = {
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string
+      clientSecret: process.env.GITHUB_SECRET as string,
+      // GitHub only returns verified emails, so it's safe to merge into an
+      // existing account by email instead of erroring with OAuthAccountNotLinked.
+      allowDangerousEmailAccountLinking: true
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
-      clientSecret: process.env.GOOGLE_SECRET as string
+      clientSecret: process.env.GOOGLE_SECRET as string,
+      // Same reasoning as GitHub above — Google verifies email ownership too.
+      allowDangerousEmailAccountLinking: true
     })
   ],
   session: { strategy: "database" },
