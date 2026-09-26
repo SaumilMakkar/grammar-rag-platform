@@ -81,6 +81,45 @@ Output format (follow EXACTLY):
 }`;
 }
 
+export interface RuleValidation {
+  valid: boolean;
+  reason?: string;
+}
+
+// Guards against garbage/irrelevant rule text before it's embedded and stored —
+// a length or regex check can't tell "banana" from a real style rule, but the
+// model can judge in one cheap call whether it reads as an actual writing instruction.
+export async function validateRuleText(text: string): Promise<RuleValidation> {
+  const completion = await groq.chat.completions.create({
+    model: MODEL,
+    temperature: 0,
+    messages: [
+      {
+        role: "system",
+        content: `You judge whether a piece of text is a meaningful writing/style rule — an instruction that could guide how someone writes (grammar, tone, terminology, formatting, phrasing, etc).
+
+Reject text that is gibberish, random characters, a single unrelated word, a question, or unrelated to writing style.
+Accept short but coherent instructions (e.g. "Use Oxford commas", "Avoid passive voice", "Keep sentences under 20 words").
+
+Respond ONLY as JSON, no markdown fences, matching exactly:
+{"valid": true or false, "reason": "one short sentence explaining why, only if invalid, else empty string"}`
+      },
+      { role: "user", content: text }
+    ]
+  });
+
+  const raw = completion.choices[0]?.message?.content ?? "{}";
+  const cleaned = raw.replace(/```json|```/g, "").trim();
+
+  try {
+    const parsed = JSON.parse(cleaned) as RuleValidation;
+    return { valid: !!parsed.valid, reason: parsed.reason };
+  } catch {
+    // Fail open: if the model response is unparseable, don't block the user over our own bug
+    return { valid: true };
+  }
+}
+
 export async function streamCorrectText(
   text: string,
   rules: StyleRule[],

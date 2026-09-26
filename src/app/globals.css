@@ -500,10 +500,38 @@ body::after {
 .rules-panel ul { list-style: none; margin: 0 0 18px; padding: 0; }
 .rules-panel li {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   padding: 10px 0 10px 20px;
   border-bottom: 1px solid rgba(77, 255, 160, 0.1);
   color: var(--text);
 }
+
+.delete-rule {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--panel-border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.delete-rule:hover:not(:disabled) {
+  border-color: #ff5c5c;
+  color: #ff5c5c;
+}
+
+.delete-rule:disabled { opacity: 0.5; cursor: default; }
 
 .rules-panel li::before {
   content: "";
@@ -532,6 +560,12 @@ body::after {
 .rules-panel input:focus {
   border-color: var(--neon);
   box-shadow: 0 0 0 3px var(--neon-soft);
+}
+
+.add-rule-error {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  color: #ff8080;
 }
 
 .diff-removed {

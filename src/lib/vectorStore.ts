@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { getRulesCollection } from "./db";
 import { embedText } from "./embeddings";
 import { StyleRule } from "@/types";
@@ -90,4 +91,12 @@ export async function addStyleRule(text: string, userId: string, category?: stri
     createdAt: new Date()
   });
   return result.insertedId;
+}
+
+// Scoped to userId so a rule can only ever be deleted by the user who owns it.
+export async function deleteStyleRule(id: string, userId: string) {
+  if (!ObjectId.isValid(id)) return false;
+  const collection = await getRulesCollection();
+  const result = await collection.deleteOne({ _id: new ObjectId(id), userId });
+  return result.deletedCount > 0;
 }
