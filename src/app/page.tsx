@@ -7,6 +7,8 @@ import SuggestionPanel from "@/components/SuggestionPanel";
 import RulesPanel from "@/components/RulesPanel";
 import { CorrectionResponse } from "@/types";
 import AuthButton from "@/components/AuthButton";
+import ThemeToggle from "@/components/ThemeToggle";
+import MascotIcon from "@/components/MascotIcon";
 
 export default function Home() {
   const { status } = useSession();
@@ -17,12 +19,17 @@ export default function Home() {
 
   return (
     <main className="page">
-      <div className="masthead">
-        <span className="glow-orb" aria-hidden="true" />
-        <h1>Marginalia</h1>
-        <p>grammar · tone · translation — checked against rules you define</p>
-        <AuthButton />
+      <div className="topbar">
+        <div className="brand">
+          <h1>Marginalia</h1>
+          <p>grammar · tone · translation — checked against rules you define</p>
+        </div>
+        <div className="topbar-actions">
+          <ThemeToggle />
+          <AuthButton />
+        </div>
       </div>
+
       {status === "authenticated" && (
         <div className="desk">
           <Editor
@@ -33,8 +40,28 @@ export default function Home() {
           <RulesPanel />
         </div>
       )}
+
       {status === "unauthenticated" && (
-        <p>Sign in to start checking your writing against your own style rules.</p>
+        <section className="hero">
+          <div className="hero-copy">
+            <h2>Your writing, held to your own standard.</h2>
+            <p>
+              Marginalia checks grammar, tone, and translation against style rules you define
+              yourself — not a generic checklist. Sign in to set up your rules and start.
+            </p>
+            <ul className="hero-features">
+              <li>Grammar &amp; clarity corrections, explained</li>
+              <li>Tone matching — formal, casual, confident, and more</li>
+              <li>Optional translation, grounded in your corrected text</li>
+              <li>Your own style rules, retrieved and applied automatically</li>
+            </ul>
+            <AuthButton />
+          </div>
+          <div className="hero-art">
+            <MascotIcon />
+            <p>Your digital writing assistant, always ready</p>
+          </div>
+        </section>
       )}
     </main>
   );

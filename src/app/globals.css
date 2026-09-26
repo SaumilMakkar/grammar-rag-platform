@@ -16,6 +16,21 @@
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
+:root[data-theme="light"] {
+  --bg: #f3faf6;
+  --bg-2: #e7f5ee;
+  --panel: rgba(255, 255, 255, 0.72);
+  --panel-solid: #ffffff;
+  --panel-border: rgba(15, 130, 75, 0.22);
+  --neon: #0f8a4b;
+  --neon-strong: #0a6e3a;
+  --neon-soft: rgba(15, 138, 75, 0.12);
+  --text: #0b2318;
+  --text-dim: #4c6b5c;
+  --accent-pink: #c23e85;
+  --danger: #c22b3f;
+}
+
 * { box-sizing: border-box; }
 
 html, body {
@@ -25,6 +40,7 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 body {
@@ -59,6 +75,14 @@ body::after {
   animation: driftB 26s ease-in-out infinite;
 }
 
+:root[data-theme="light"] body::before {
+  background: radial-gradient(circle, rgba(15, 138, 75, 0.14), transparent 70%);
+}
+
+:root[data-theme="light"] body::after {
+  background: radial-gradient(circle, rgba(194, 62, 133, 0.08), transparent 70%);
+}
+
 @keyframes driftA {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(6vmax, 8vmax) scale(1.1); }
@@ -77,32 +101,46 @@ body::after {
   padding: 56px 28px 96px;
 }
 
-.masthead {
-  position: relative;
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
   border-bottom: 1px solid var(--panel-border);
   padding-bottom: 22px;
   margin-bottom: 40px;
+  flex-wrap: wrap;
 }
 
-.glow-orb {
-  position: absolute;
-  top: -18px;
-  right: 4px;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--neon-strong), transparent 72%);
-  filter: blur(2px);
-  opacity: 0.8;
-  animation: floatY 5s ease-in-out infinite;
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
 }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--panel-border);
+  background: var(--panel-solid);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.theme-toggle:hover { border-color: var(--neon); transform: translateY(-1px); }
 
 @keyframes floatY {
   0%, 100% { transform: translateY(0); opacity: 0.7; }
   50% { transform: translateY(-10px); opacity: 1; }
 }
 
-.masthead h1 {
+.brand h1 {
   font-family: var(--display);
   font-weight: 700;
   font-size: 2.6rem;
@@ -112,10 +150,95 @@ body::after {
   text-shadow: 0 0 24px var(--neon-soft);
 }
 
-.masthead p {
+.brand p {
   font-family: var(--mono);
   font-size: 0.85rem;
   color: var(--text-dim);
+  margin: 0;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  padding: 24px 0 40px;
+}
+
+.hero-copy { flex: 1 1 360px; }
+
+.hero-copy h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.25;
+  margin: 0 0 16px;
+  color: var(--text);
+}
+
+.hero-copy > p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  margin: 0 0 24px;
+}
+
+.hero-features {
+  list-style: none;
+  margin: 0 0 32px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hero-features li {
+  position: relative;
+  padding-left: 22px;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.hero-features li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon);
+  box-shadow: 0 0 8px var(--neon);
+}
+
+.hero-art {
+  flex: 0 1 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  padding: 36px 28px;
+  box-shadow: 0 0 0 1px rgba(77, 255, 160, 0.04), 0 30px 80px -30px rgba(34, 255, 136, 0.3);
+}
+
+.mascot-svg {
+  width: 160px;
+  height: auto;
+  filter: drop-shadow(0 0 26px var(--neon-soft));
+  animation: floatY 5s ease-in-out infinite;
+}
+
+.hero-art p {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
   margin: 0;
 }
 
@@ -123,7 +246,6 @@ body::after {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 18px;
   font-family: var(--sans);
   font-size: 0.85rem;
   color: var(--text-dim);
