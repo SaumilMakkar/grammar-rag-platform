@@ -9,9 +9,14 @@ export default function AuthButton() {
 
   if (!session) {
     return (
-      <button className="correct-btn" onClick={() => signIn("github")}>
-        Sign in with GitHub
-      </button>
+      <div className="signin-options">
+        <button className="correct-btn" onClick={() => signIn("github")}>
+          Sign in with GitHub
+        </button>
+        <button className="correct-btn" onClick={() => signIn("google")}>
+          Sign in with Google
+        </button>
+      </div>
     );
   }
 

@@ -427,6 +427,13 @@ body::after {
 .correct-btn:hover:not(:disabled) { transform: translateY(-1px); }
 .correct-btn:disabled { opacity: 0.5; cursor: default; animation: none; }
 
+.signin-options {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 @keyframes pulseGlow {
   0%, 100% { box-shadow: 0 0 14px var(--neon-soft); }
   50% { box-shadow: 0 0 28px rgba(77, 255, 160, 0.4); }
