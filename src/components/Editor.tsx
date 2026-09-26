@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CorrectionResponse } from "@/types";
 
 const TONES = ["neutral", "formal", "casual", "confident", "friendly"] as const;
-const LANGUAGES = ["", "Spanish", "French", "Hindi", "German", "Japanese"];
+const LANGUAGES = ["", "Spanish", "French", "Hindi", "German", "Japanese", "Punjabi"];
 
 export default function Editor({
   onResult,
